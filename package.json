@@ -1,0 +1,27 @@
+{
+  "name": "challenge-7-bc26",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lienekl/challenge-7-bc26.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/lienekl/challenge-7-bc26/issues"
+  },
+  "homepage": "https://github.com/lienekl/challenge-7-bc26#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "uuidv4": "^6.2.13"
+  }
+}
