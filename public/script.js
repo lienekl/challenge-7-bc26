@@ -11,56 +11,37 @@ document.addEventListener("DOMContentLoaded", () => {
       noteList.innerHTML = ""; // Clear the list before rendering
       notes.forEach((item) => {
         const li = document.createElement("li");
-        li.textContent = `${item.note}`, value.trim();
+        li.textContent = `${item.note} `;
+
 
         const editBtn = document.createElement("button");
         editBtn.textContent = "Edit";
-        editBtn.onclick = () => editNote(item.note); //check if in need to remove item.id. Item ID should not be 
+        editBtn.onclick = () => editNote(item.note);
+
 
         const deleteBtn = document.createElement("button");
         deleteBtn.className = "close";
         deleteBtn.textContent = "x";
-        deleteBtn.onclick = () => deleteNote(item.id); // check if this one is needed+
+        deleteBtn.addEventListener("click", async () => {
+        //   if (confirm("Are you sure you want to delete this?")) {
+        //   await fetch(`/note/${item.id}`, { method: "DELETE" });
+        //   fetchData();
+        //   }
+        // });
 
-
-        const editNote = async () => {
-          const newText = prompt("Update your text:", currentText);
-
-          if (newText !== null && newText.trim() !== currentText) {
-            try {
-              const response = await fetch(`/note/${item.id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ note: newText }),
-              });
-
-              if (response.ok) {
-                fetchData(); // Refresh list after editing
-              }
-            } catch (error) {
-              console.error("Error updating:", error);
-            }
-          }
-        };
-
-        //Handle deleting notes
-        const deleteNote = async () => {
           if (confirm("Are you sure you want to delete this?")) {
             try {
-              const response = fetch(`/note/${item.id}`, {
+              await fetch(`/note/${item.id}`, {
                 method: "DELETE",
               });
-
-              if (response.ok) {
+             
                 fetchData(); // Refresh list after deleting
-              }
-            } catch (error) {
-              console.error("Error deleting:", error);
-            }
+            
+            } 
           }
-        };
+        });
 
-
+        //  = deleteNote(item.id); // check if this one is needed
         noteList.appendChild(li);
         li.appendChild(editBtn);
         li.appendChild(deleteBtn);
@@ -83,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (response.ok) {
-        data.value = "";
+        input.value = "";
         fetchData();
       }
     } catch (error) {
@@ -92,6 +73,37 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Handle form submission to edit notes
+
+
+  const editNote = async () => {
+    const newText = prompt("Update your text:", currentText);
+
+    if (newText !== null && newText.trim() !== currentText) {
+      try {
+        const response = await fetch(`/note/${item.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ note: newText }),
+        });
+
+        if (response.ok) {
+          fetchData(); // Refresh list after editing
+        }
+      } catch (error) {
+        console.error("Error updating:", error);
+      }
+    }
+  };
+
+  //Handle deleting notes
+
+  // deleteBtn.addEventListener("click", async () => {
+  //   await fetch(`/note/${item.id}`, { method: "DELETE"});
+  //   fetchData();
+  // } );
+
+
+
 
 
   // Fetch data on page load
