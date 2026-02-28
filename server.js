@@ -13,81 +13,79 @@ const PORT = 3001;
 // Middleware to parse incoming JSON requests
 app.use(express.json());
 
-// TODO:  Serve static files from the 'public' directory - always we need to use this to serve file in public directory.
+// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, "public")));
 
 // Define the path to the JSON file
-const dataFilePath = path.join(__dirname, "data.json");
+const noteFilePath = path.join(__dirname, "data.json");
 
 // Function to read data from the JSON file
-const readData = () => {
-    if (!fs.existsSync(dataFilePath)) {
+const readNote = () => {
+    if (!fs.existsSync(noteFilePath)) {
         return [];
     }
-    const data = fs.readFileSync(dataFilePath);
-    return JSON.parse(data);
+    const note = fs.readFileSync(noteFilePath);
+    return JSON.parse(note);
 };
 
 // Function to write data to the JSON file
-const writeData = (data) => {
-    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+const writeNote = (note) => {
+    fs.writeFileSync(noteFilePath, JSON.stringify(note, null, 2));
 };
 
-// TODO: Handle GET request at the root route
+// Handle GET request at the root route
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // Handle GET request to retrieve stored data
-app.get("/data", (req, res) => {
-    const data = readData();
-    res.json(data);
+app.get("/note", (req, res) => {
+    const note = readNote();
+    res.json(note);
 });
 
 // Handle POST request to save new data with a unique ID
-app.post("/data", (req, res) => {
-    const newData = { id: uuidv4(), ...req.body };
-    const currentData = readData();
-    currentData.push(newData);
-    writeData(currentData);
-    res.json({ message: "Data saved successfully", data: newData });
+app.post("/note", (req, res) => {
+    const newNote = { id: uuidv4(), ...req.body };
+    const currentNote = readNote();
+    currentNote.push(newNote);
+    writeNote(currentNote);
+    res.json({ message: "Note saved successfully", note: newNote });
 });
 
 // Handle GET request to retrieve data by ID
-app.get("/data/:id", (req, res) => {
-    const data = readData();
-    const item = data.find((item) => item.id === req.params.id);
+app.get("/note/:id", (req, res) => {
+    const note = readNote();
+    const item = note.find((item) => item.id === req.params.id);
     if (!item) {
-        return res.status(404).json({ message: "Data not found" });
+        return res.status(404).json({ message: "Note not found" });
     }
     res.json(item);
 });
 
-// TODO: Handle PUT request to update data by ID
-app.put("/data/:id", (req, res) => {
-    const data = readData();
-    const item = data.find((item) => item.id === req.params.id);
+// Handle PUT request to update data by ID
+app.put("/note/:id", (req, res) => {
+    const note = readNote();
+    const item = note.find((item) => item.id === req.params.id);
     if (!item) {
-        return res.status(404).json({ message: "Data not found" });
+        return res.status(404).json({ message: "Note not found" });
     }
-    item.note = req.body.note; //we want to updated item.name (name is the variable that containes the text in data.json file("name": "test2"). it can also be a note r message... anyhting. )updated the note if provided
-    writeData(data);
-
+    item.note = req.body.note; 
+    writeNote(note);
     res.json(item);
 });
 
 
-// TODO: Handle DELETE request to delete data by ID
-app.delete("/data/:id", (req, res) => {
-    const data = readData();
-    const index = data.findIndex((item) => item.id === req.params.id);
+// Handle DELETE request to delete data by ID
+app.delete("/note/:id", (req, res) => {
+    const note = readNote();
+    const index = note.findIndex((item) => item.id === req.params.id);
     if (index === -1) {
-        return res.status(404).json({ message: "Data not found" });
+        return res.status(404).json({ message: "Note not found" });
     }
-    const deletedItem = data.splice(index, 1)[0]; //Remove the item from the array
-    writeData(data); //Write the updated data back to the file.
-
-    res.jsonp({ message: "Data deleted successfully", data: deletedItem });
+    const deletedItem = note.splice(index, 1)[0]; 
+    writeNote(note); 
+    res.json({ message: "Note deleted successfully", note: deletedItem });
 });
 
 // Handle POST request at the /echo route
