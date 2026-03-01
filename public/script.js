@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         //EDIT button
         const editBtn = document.createElement("button");
-        editBtn.idName = "edit";
+        editBtn.className = "edit";
         editBtn.textContent = "Edit";
         editBtn.addEventListener("click", async () => {
           const currentText = item.value;
