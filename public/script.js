@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const currentText = item.value;
           const newText = prompt("Update your text:", currentText);
 
-          if (newText !== null && newText.trim() !== "" && newText.trim() !== currentText) {
+          if (newText !== null && newText.trim() !== "") {
             try {
               const response = await fetch(`/note/${item.id}`, {
                 method: "PUT",
