@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         //EDIT button
         const editBtn = document.createElement("button");
+        editBtn.idName = "edit";
         editBtn.textContent = "Edit";
         editBtn.addEventListener("click", async () => {
           const currentText = item.value;
@@ -40,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // DELETE button
         const deleteBtn = document.createElement("button");
-        deleteBtn.className = "close";
+        deleteBtn.className = "delete";
         deleteBtn.textContent = "x";
         deleteBtn.onclick = () => deleteNote(item.id);
         const deleteNote = async () => {
