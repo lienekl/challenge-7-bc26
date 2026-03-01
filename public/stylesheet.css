@@ -71,7 +71,7 @@ input {
     text-align: center;
 }
 
-button {
+#button {
     background-color: #3E593B;
     color: #FEF8F2;
     border-radius: 50px;
@@ -84,6 +84,21 @@ button {
     cursor: pointer;
     font-family: "Montserrat", sans-serif;
     margin: auto;
+}  
+
+button {
+    background-color: #3E593B;
+    color: #FEF8F2;
+    border-radius: 50px;
+    border: none;
+    outline: none;
+    padding: 3px 40px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: medium;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
+    margin: auto 20px;
 }
 
 input::placeholder {

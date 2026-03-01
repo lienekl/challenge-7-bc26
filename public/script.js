@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputForm = document.getElementById("input-form");
   const input = document.getElementById("input");
 
+
   // Function to fetch data from the backend
   const fetchData = async () => {
     try {
@@ -13,35 +14,52 @@ document.addEventListener("DOMContentLoaded", () => {
         const li = document.createElement("li");
         li.textContent = `${item.note} `;
 
-
+        //EDIT button
         const editBtn = document.createElement("button");
         editBtn.textContent = "Edit";
-        editBtn.onclick = () => editNote(item.note);
+        editBtn.addEventListener("click", async () => {
+          const currentText = item.value;
+          const newText = prompt("Update your text:", currentText);
 
-
-        const deleteBtn = document.createElement("button");
-        deleteBtn.className = "close";
-        deleteBtn.textContent = "x";
-        deleteBtn.addEventListener("click", async () => {
-        //   if (confirm("Are you sure you want to delete this?")) {
-        //   await fetch(`/note/${item.id}`, { method: "DELETE" });
-        //   fetchData();
-        //   }
-        // });
-
-          if (confirm("Are you sure you want to delete this?")) {
+          if (newText !== null && newText.trim() !== "" && newText.trim() !== currentText) {
             try {
-              await fetch(`/note/${item.id}`, {
-                method: "DELETE",
+              const response = await fetch(`/note/${item.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ note: newText }),
               });
-             
-                fetchData(); // Refresh list after deleting
-            
-            } 
+
+              if (response.ok) {
+                fetchData(); 
+              }
+            } catch (error) {
+              console.error("Error updating:", error);
+            }
           }
         });
 
-        //  = deleteNote(item.id); // check if this one is needed
+        // DELETE button
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "close";
+        deleteBtn.textContent = "x";
+        deleteBtn.onclick = () => deleteNote(item.id);
+        const deleteNote = async () => {
+          if (confirm("Do you want to DELETE the note?")) {
+            try {
+              const response = await fetch(`/note/${item.id}`, {
+                method: "DELETE",
+              });
+
+              if (response.ok) {
+                fetchData(); // 
+              }
+            } catch (error) {
+              console.error("Error deleting:", error);
+            }
+          }
+        };
+
+
         noteList.appendChild(li);
         li.appendChild(editBtn);
         li.appendChild(deleteBtn);
@@ -55,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
   inputForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const newNote = { note: input.value };
-
+ if (input.value.trim() !== "") {
     try {
       const response = await fetch("/note", {
         method: "POST",
@@ -70,41 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error adding note:", error);
     }
+  } else {alert("Add your note!")};
   });
-
-  // Handle form submission to edit notes
-
-
-  const editNote = async () => {
-    const newText = prompt("Update your text:", currentText);
-
-    if (newText !== null && newText.trim() !== currentText) {
-      try {
-        const response = await fetch(`/note/${item.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ note: newText }),
-        });
-
-        if (response.ok) {
-          fetchData(); // Refresh list after editing
-        }
-      } catch (error) {
-        console.error("Error updating:", error);
-      }
-    }
-  };
-
-  //Handle deleting notes
-
-  // deleteBtn.addEventListener("click", async () => {
-  //   await fetch(`/note/${item.id}`, { method: "DELETE"});
-  //   fetchData();
-  // } );
-
-
-
-
 
   // Fetch data on page load
   fetchData();
